@@ -1,10 +1,11 @@
 import csv
+var = 'RuleOfLaw'
 
-with open('data/WGIData.csv', 'rb') as f:
+with open('data/WGI/' + var + '.csv', 'rb') as f:
     reader = csv.reader(f)
     dataList = list(reader)
 
-with open('data/WGIData-transformed.csv', 'a') as g:
+with open('data/WGI/' + var + '-transformed.csv', 'a+') as g:
     writer = csv.writer(g)
 
     for country in dataList[2:]:

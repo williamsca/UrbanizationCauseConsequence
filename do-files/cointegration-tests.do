@@ -11,7 +11,7 @@ scalar criticalValue = -4.257586
 local testSpec "trend"
 local column "J"
 local indVar "PctPopUrban" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD
-local depVar "estimateVA" // PctPopUrban, PctPopMillUrb
+local depVar "estimateGovt" // PctPopUrban, PctPopMillUrb
 
 levels(Country), local(countries)
 putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/WGICointegration_results.xlsx", modify sheet(`indVar'`depVar')
@@ -24,32 +24,29 @@ foreach country of local countries {
 	local ++i
 }*/
 
-
-replace residuals = 0
-//putexcel `column'1 = "`testSpec'"
+// Engle-Granger
+// Non-stationary residuals -> no cointegration
+gen residuals = .
+putexcel `column'1 = "`testSpec'"
 local row "2"
 foreach country of local countries {
-
-	// Engle-Granger
-	// Non-stationary residuals -> no cointegration
 	quietly capture regress `indVar' `depVar' if Country == "`country'"
 	
 	capture predict temp if Country == "`country'", res
 	capture replace residuals = temp if temp ~= .
 	capture drop temp
 	
+	// di "Country: `country'"
 	// Null: variable contains a unit root
 	// Alternative: residuals are stationary -> cointegration
 	capture dfuller residuals if Country == "`country'" & residuals != ., `testSpec'
 	
-	/*
 	if (_rc == 0) {
 		putexcel `column'`row' = (r(Zt))
 	} 
 	else {
 		putexcel `column'`row' = "N/A"
-	}*/
-	
+	}
 	replace cointegrated = 1 if r(Zt) <= criticalValue & Country == "`country'"
 	local ++row
 }

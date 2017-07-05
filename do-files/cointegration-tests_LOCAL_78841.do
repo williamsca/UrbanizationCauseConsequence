@@ -1,20 +1,20 @@
 clear
 set more off
 
-use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/WDIUrbanDev-clean.dta"
+use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/cointegratedVA.dta"
 
-gen byte cointegrated = 0
+replace cointegrated = 0
 
 // No trend:	 -3.635118
 // With trend: 	 -4.257586
-scalar criticalValue = -4.257586
-local testSpec "trend"
-local column "J"
+scalar criticalValue = -10
+local testSpec "trend lags(2)"
+//local column "B"
 local indVar "PctPopUrban" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD
 local depVar "estimateVA" // PctPopUrban, PctPopMillUrb
 
 levels(Country), local(countries)
-putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/WGICointegration_results.xlsx", modify sheet(`indVar'`depVar')
+//putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/Coint_with_unit_roots.xlsx", modify sheet(`indVar'`depVar')
 
 /*
 putexcel A1 = "Country"
@@ -40,7 +40,7 @@ foreach country of local countries {
 	
 	// Null: variable contains a unit root
 	// Alternative: residuals are stationary -> cointegration
-	capture dfuller residuals if Country == "`country'" & residuals != ., `testSpec'
+	 dfuller residual if Country == "`country'" & residuals != 0, `testSpec'
 	
 	/*
 	if (_rc == 0) {
@@ -54,10 +54,11 @@ foreach country of local countries {
 	local ++row
 }
 tab Country if cointegrated == 1
+xtpedroni PctPopUrban estimateVA if cointegrated == 1, trend
 
 
-// A panel cointegration test indicates  cointegration:
-xtpedroni `indVar' `depVar' if cointegrated == 1, trend
+// But then a panel cointegration test indicates no cointegration:
+// xtwest GDPRealUSD PctPopUrban if cointegrated == 1, constant lags(1 4)
 
 /*
 // Single case with graphs

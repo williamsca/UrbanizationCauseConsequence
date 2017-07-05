@@ -1,8 +1,22 @@
 clear
 set more off
 
-use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/WDIUrbanDev-clean.dta"
+use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/cointegratedVA.dta"
 
+<<<<<<< HEAD
+replace cointegrated = 0
+
+// No trend:	 -3.635118
+// With trend: 	 -4.257586
+scalar criticalValue = -10
+local testSpec "trend lags(2)"
+//local column "B"
+local indVar "PctPopUrban" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD
+local depVar "estimateVA" // PctPopUrban, PctPopMillUrb
+
+levels(Country), local(countries)
+//putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/Coint_with_unit_roots.xlsx", modify sheet(`indVar'`depVar')
+=======
 gen byte cointegrated = 0
 
 // No trend:	 -3.635118
@@ -11,10 +25,11 @@ scalar criticalValue = -4.257586
 local testSpec "trend"
 local column "J"
 local indVar "PctPopUrban" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD
-local depVar "estimateVA" // PctPopUrban, PctPopMillUrb
+local depVar "estimateGovt" // PctPopUrban, PctPopMillUrb
 
 levels(Country), local(countries)
 putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/WGICointegration_results.xlsx", modify sheet(`indVar'`depVar')
+>>>>>>> 1bb7e2cf2e07f70e9bbb2e5abe3aa01f5f1b0795
 
 /*
 putexcel A1 = "Country"
@@ -24,9 +39,16 @@ foreach country of local countries {
 	local ++i
 }*/
 
+<<<<<<< HEAD
 
 replace residuals = 0
 //putexcel `column'1 = "`testSpec'"
+=======
+// Engle-Granger
+// Non-stationary residuals -> no cointegration
+gen residuals = .
+putexcel `column'1 = "`testSpec'"
+>>>>>>> 1bb7e2cf2e07f70e9bbb2e5abe3aa01f5f1b0795
 local row "2"
 foreach country of local countries {
 
@@ -40,7 +62,11 @@ foreach country of local countries {
 	
 	// Null: variable contains a unit root
 	// Alternative: residuals are stationary -> cointegration
+<<<<<<< HEAD
+	 dfuller residual if Country == "`country'" & residuals != 0, `testSpec'
+=======
 	capture dfuller residuals if Country == "`country'" & residuals != ., `testSpec'
+>>>>>>> 1bb7e2cf2e07f70e9bbb2e5abe3aa01f5f1b0795
 	
 	/*
 	if (_rc == 0) {
@@ -54,6 +80,7 @@ foreach country of local countries {
 	local ++row
 }
 tab Country if cointegrated == 1
+xtpedroni PctPopUrban estimateVA if cointegrated == 1, trend
 
 
 // A panel cointegration test indicates  cointegration:

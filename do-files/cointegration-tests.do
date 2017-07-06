@@ -1,20 +1,20 @@
 clear
 set more off
 
-use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/cointegratedGDPPerCapRealLCU.dta"
+use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/WDIUrbanDev-clean.dta"
 
 gen byte cointegrated = 0
 
 // N = 25, no trend: -3.635   ; with trend: -4.258
 // N = 45, no trend: −3.475	  ; with trend: −3.998
-scalar criticalValue = -3.635118
-local testSpec "trend"
-local column "J"
+scalar criticalValue = -4.258
+local testSpec "trend lags(4)"
+local column "P"
 local indVar "PctPopUrban" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
-local depVar "GDPPerCapRealLCU" // PctPopUrban, PctPopMillUrb
+local depVar "estimateRuleLaw" // PctPopUrban, PctPopMillUrb
 
 levels(Country), local(countries)
-// putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/Cointegration_results_fixed.xlsx", modify sheet(`indVar'`depVar')
+putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/WGICointegration_results_fixed.xlsx", modify sheet(`indVar'`depVar')
 
 /*
 putexcel A1 = "Country"
@@ -41,13 +41,13 @@ foreach country of local countries {
 	// Alternative: residuals are stationary -> cointegration
 	capture dfuller residuals if Country == "`country'" & residuals != ., `testSpec'
 	
-	/*
+	
 	if (_rc == 0) {
 		putexcel `column'`row' = (r(Zt))
 	} 
 	else {
 		putexcel `column'`row' = "N/A"
-	}*/
+	}
 	
 	replace cointegrated = 1 if r(Zt) <= criticalValue & Country == "`country'"
 	local ++row
@@ -55,8 +55,8 @@ foreach country of local countries {
 tab Country if cointegrated == 1
 
 // A panel cointegration test indicates  cointegration:
-xtpedroni `indVar' `depVar' if cointegrated == 1
 xtpedroni `indVar' `depVar' if cointegrated == 1, trend
+//xtpedroni `indVar' `depVar' if cointegrated == 1, trend
 
 /*
 // Single case with graphs

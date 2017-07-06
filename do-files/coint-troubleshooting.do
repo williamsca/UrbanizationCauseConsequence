@@ -3,8 +3,8 @@ set more off
 
 use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/toy.dta"
 
-local res "."
-gen residuals = `res'
+local res "0"
+replace residuals = `res'
 local indVar "PctPopUrban"
 local depVar "PerCapGDP"
 local country "Argentina"
@@ -36,5 +36,3 @@ replace residuals = temp if temp ~= .
 drop temp
 
 dfuller residuals if residuals != `res', `testSpec'
-
-list residuals if residuals != `res'

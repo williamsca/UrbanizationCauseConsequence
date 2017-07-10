@@ -1,0 +1,110 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/estimateGovt_test_results.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}10 Jul 2017, 16:18:06
+
+{com}. do "/var/folders/fg/cv_vxr2s13z3jnnfdkns7ty9sxldbg/T//SD01365.000000"
+{txt}
+{com}. local indVar "PctPopUrban"
+{txt}
+{com}. // estimateGovt, estimateRegQual
+. local depVar "estimateGovt"
+{txt}
+{com}. 
+. 
+. xtpedroni `indVar' `depVar' if cointegrated == 1, trend
+{txt}(424 missing values generated)
+(424 missing values generated)
+(112 missing values generated)
+
+
+Please Wait: Calculating Statistics
+
+
+{bf:Pedroni's cointegration tests:}
+No. of Panel units: 8{col 30}Regressors: 1
+No. of obs.: 136{col 30}Avg obs. per unit: 17
+Data has been time-demeaned.
+A time trend has been included.
+{res}
+{txt}{space 4}{hline 15}{c  TT}{hline 11}{hline 11}
+{space 4}{space 0}{ralign 14:Test Stats.}{space 1}{c |}{space 1}{ralign 9:Panel}{space 1}{space 1}{ralign 9:Group}{space 1}
+{space 4}{hline 15}{c   +}{hline 11}{hline 11}
+{space 4}{space 0}{ralign 14:v}{space 1}{c |}{space 1}{ralign 9:{res:{sf:    5.698}}}{space 1}{space 1}{ralign 9:{res:{sf:        .}}}{space 1}
+{space 4}{space 0}{ralign 14:rho}{space 1}{c |}{space 1}{ralign 9:{res:{sf:   -.3792}}}{space 1}{space 1}{ralign 9:{res:{sf:    .8541}}}{space 1}
+{space 4}{space 0}{ralign 14:t}{space 1}{c |}{space 1}{ralign 9:{res:{sf:   -10.18}}}{space 1}{space 1}{ralign 9:{res:{sf:   -6.733}}}{space 1}
+{space 4}{space 0}{ralign 14:adf}{space 1}{c |}{space 1}{ralign 9:{res:{sf:   -1.176}}}{space 1}{space 1}{ralign 9:{res:{sf:     .478}}}{space 1}
+{space 4}{hline 15}{c  BT}{hline 11}{hline 11}
+All test statistics are distributed N(0,1), under a null of no cointegration,
+and diverge to negative infinity (save for panel {it:v}).
+
+
+{bf:Pedroni's PDOLS (Group mean average):}
+No. of Panel units: 8{col 30}Lags and leads: 2
+Number of obs: 72{col 30}Avg obs. per unit: 9
+Data has been time-demeaned.
+{res}
+{txt}{space 4}{hline 15}{c  TT}{hline 11}{hline 11}
+{space 4}{space 0}{ralign 14:Variables}{space 1}{c |}{space 1}{ralign 9:Beta}{space 1}{space 1}{ralign 9:t-stat}{space 1}
+{space 4}{hline 15}{c   +}{hline 11}{hline 11}
+{space 4}{space 0}{ralign 14:estimateGovt~d}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     2.16}}}{space 1}{space 1}{ralign 9:{res:{sf:    84.26}}}{space 1}
+{space 4}{hline 15}{c  BT}{hline 11}{hline 11}
+
+{com}. //xtpedroni `indVar' `depVar' if cointegrated == 1
+. xtunitroot ips `indVar' if cointegrated == 1, trend
+
+{txt}Im-Pesaran-Shin unit-root test for {res}PctPopUrban
+{txt}{hline 46}
+Ho: All panels contain unit roots{col 45}Number of panels{col 63}={col 64}{res}      8
+{txt}Ha: Some panels are stationary{col 45}Number of periods{col 63}={col 64}{res}     56
+
+{txt}AR parameter: {res}Panel-specific{txt}{col 45}Asymptotics: {res}T,N -> Infinity
+{txt}Panel means:  {res}Included{col 63}sequentially
+{txt}Time trend:   {res}Included
+
+{txt}ADF regressions: {res}No lags included
+{txt}{hline 78}
+{col 47}Fixed-N exact critical values
+{col 21}Statistic{col 36}p-value{col 52}1%{col 60}5%{col 68}10%
+{hline 78}
+{col 2}t-bar{res}{col 21} -1.8606{col 50}-2.760{col 58}-2.590{col 66}-2.500
+{txt}{col 2}t-tilde-bar{res}{col 21} -1.2389
+{txt}{col 2}Z-t-tilde-bar{res}{col 21}  0.8407{col 37}0.7997
+{txt}{hline 78}
+
+{com}. //xtunitroot ips `indVar' if cointegrated == 1
+. //xtunitroot ips `depVar' if cointegrated == 1, trend
+. xtunitroot ips `depVar' if cointegrated == 1
+
+{txt}Im-Pesaran-Shin unit-root test for {res}estimateGovt
+{txt}{hline 47}
+Ho: All panels contain unit roots{col 45}Number of panels{col 63}={col 64}{res}      8
+{txt}Ha: Some panels are stationary{col 45}Number of periods{col 63}={col 64}{res}     17
+
+{txt}AR parameter: {res}Panel-specific{txt}{col 45}Asymptotics: {res}T,N -> Infinity
+{txt}Panel means:  {res}Included{col 63}sequentially
+{txt}Time trend:   {res}Not included
+
+{txt}ADF regressions: {res}No lags included
+{txt}{hline 78}
+{col 47}Fixed-N exact critical values
+{col 21}Statistic{col 36}p-value{col 52}1%{col 60}5%{col 68}10%
+{hline 78}
+{col 2}t-bar{res}{col 21} -2.0069{col 50}-2.210{col 58}-1.990{col 66}-1.890
+{txt}{col 2}t-tilde-bar{res}{col 21} -1.5843
+{txt}{col 2}Z-t-tilde-bar{res}{col 21} -0.8086{col 37}0.2094
+{txt}{hline 78}
+
+{com}. 
+{txt}end of do-file
+
+{com}. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/estimateGovt_test_results.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}10 Jul 2017, 16:18:15
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

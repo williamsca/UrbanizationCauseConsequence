@@ -1,0 +1,107 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/GDPRealLCU_test_results.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}10 Jul 2017, 11:25:39
+
+{com}. do "/var/folders/fg/cv_vxr2s13z3jnnfdkns7ty9sxldbg/T//SD46916.000000"
+{txt}
+{com}. local indVar "PctPopUrban"
+{txt}
+{com}. local depVar "GDPRealLCU"
+{txt}
+{com}. 
+. xtpedroni `indVar' `depVar' if cointegrated == 1, trend
+{txt}(230 missing values generated)
+(230 missing values generated)
+
+
+Please Wait: Calculating Statistics
+
+
+{bf:Pedroni's cointegration tests:}
+No. of Panel units: 13{col 30}Regressors: 1
+No. of obs.: 498{col 30}Avg obs. per unit: 38
+Data has been time-demeaned.
+A time trend has been included.
+{res}
+{txt}{space 4}{hline 15}{c  TT}{hline 11}{hline 11}
+{space 4}{space 0}{ralign 14:Test Stats.}{space 1}{c |}{space 1}{ralign 9:Panel}{space 1}{space 1}{ralign 9:Group}{space 1}
+{space 4}{hline 15}{c   +}{hline 11}{hline 11}
+{space 4}{space 0}{ralign 14:v}{space 1}{c |}{space 1}{ralign 9:{res:{sf:    2.531}}}{space 1}{space 1}{ralign 9:{res:{sf:        .}}}{space 1}
+{space 4}{space 0}{ralign 14:rho}{space 1}{c |}{space 1}{ralign 9:{res:{sf:   -1.923}}}{space 1}{space 1}{ralign 9:{res:{sf:    .1709}}}{space 1}
+{space 4}{space 0}{ralign 14:t}{space 1}{c |}{space 1}{ralign 9:{res:{sf:   -2.323}}}{space 1}{space 1}{ralign 9:{res:{sf:   -1.551}}}{space 1}
+{space 4}{space 0}{ralign 14:adf}{space 1}{c |}{space 1}{ralign 9:{res:{sf:   -1.723}}}{space 1}{space 1}{ralign 9:{res:{sf:   -1.794}}}{space 1}
+{space 4}{hline 15}{c  BT}{hline 11}{hline 11}
+All test statistics are distributed N(0,1), under a null of no cointegration,
+and diverge to negative infinity (save for panel {it:v}).
+
+
+{bf:Pedroni's PDOLS (Group mean average):}
+No. of Panel units: 13{col 30}Lags and leads: 2
+Number of obs: 433{col 30}Avg obs. per unit: 33
+Data has been time-demeaned.
+{res}
+{txt}{space 4}{hline 15}{c  TT}{hline 11}{hline 11}
+{space 4}{space 0}{ralign 14:Variables}{space 1}{c |}{space 1}{ralign 9:Beta}{space 1}{space 1}{ralign 9:t-stat}{space 1}
+{space 4}{hline 15}{c   +}{hline 11}{hline 11}
+{space 4}{space 0}{ralign 14:GDPRealLCU_td}{space 1}{c |}{space 1}{ralign 9:{res:{sf: 4.27e-13}}}{space 1}{space 1}{ralign 9:{res:{sf:    13.46}}}{space 1}
+{space 4}{hline 15}{c  BT}{hline 11}{hline 11}
+
+{com}. //xtpedroni `indVar' `depVar' if cointegrated == 1
+. xtunitroot ips `indVar' if cointegrated == 1, trend
+
+{txt}Im-Pesaran-Shin unit-root test for {res}PctPopUrban
+{txt}{hline 46}
+Ho: All panels contain unit roots{col 45}Number of panels{col 63}={col 64}{res}     13
+{txt}Ha: Some panels are stationary{col 45}Number of periods{col 63}={col 64}{res}     56
+
+{txt}AR parameter: {res}Panel-specific{txt}{col 45}Asymptotics: {res}T,N -> Infinity
+{txt}Panel means:  {res}Included{col 63}sequentially
+{txt}Time trend:   {res}Included
+
+{txt}ADF regressions: {res}No lags included
+{txt}{hline 78}
+{col 47}Fixed-N exact critical values
+{col 21}Statistic{col 36}p-value{col 52}1%{col 60}5%{col 68}10%
+{hline 78}
+{col 2}t-bar{res}{col 21} -2.0280{col 50}-2.660{col 58}-2.520{col 66}-2.440
+{txt}{col 2}t-tilde-bar{res}{col 21} -1.1977
+{txt}{col 2}Z-t-tilde-bar{res}{col 21}  1.2547{col 37}0.8952
+{txt}{hline 78}
+
+{com}. //xtunitroot ips `indVar' if cointegrated == 1
+. xtunitroot ips `depVar' if cointegrated == 1, trend
+
+{txt}Im-Pesaran-Shin unit-root test for {res}GDPRealLCU
+{txt}{hline 45}
+Ho: All panels contain unit roots{col 45}Number of panels{col 68}={col 69}{res}     13
+{txt}Ha: Some panels are stationary{col 45}Avg. number of periods{col 68}={col 69}{res}  38.31
+
+{txt}AR parameter: {res}Panel-specific{txt}{col 45}Asymptotics: {res}T,N -> Infinity
+{txt}Panel means:  {res}Included{col 63}sequentially
+{txt}Time trend:   {res}Included
+
+{txt}ADF regressions: {res}No lags included
+{txt}{hline 78}
+{col 47}Fixed-N exact critical values
+{col 21}Statistic{col 36}p-value{col 52}1%{col 60}5%{col 68}10%
+{hline 78}
+{col 2}t-bar{res}{col 21} -0.8679{col 55}(Not available)
+{txt}{col 2}t-tilde-bar{res}{col 21} -0.8397
+{txt}{col 2}Z-t-tilde-bar{res}{col 21}  2.7675{col 37}0.9972
+{txt}{hline 78}
+
+{com}. //xtunitroot ips `depVar' if cointegrated == 1
+. 
+{txt}end of do-file
+
+{com}. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/GDPRealLCU_test_results.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}10 Jul 2017, 11:26:16
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

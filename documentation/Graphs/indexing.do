@@ -1,4 +1,4 @@
-local var "GDPRealLCU"
+local var "GDPPerCapRealLCU"
 
 drop if missing(`var')
 drop CountryNum
@@ -11,7 +11,7 @@ bysort CountryNum (Year): replace first = 1 if _n == 1
 egen firstVar = min(`var' / (first == 1)), by(CountryNum) 
 replace indx`var' = `var' / firstVar * 100
 
-xtline indx`var', overlay title("GDP in Real Local Currency") ///
+xtline indx`var', overlay title("GDP Per Capita in Real Local Currency") ///
 subtitle("Index, First Observation = 100") ytitle("GDP") xtitle("Year") ///
 legend(off) ytick(100) note("") ///
 

@@ -10,7 +10,7 @@ gen byte cointegrated = 0
 scalar criticalValue = -4.258
 local testSpec "trend"
 local column "B"
-local indVar "estimateVA" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
+local indVar "estimateRegQual" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
 local depVar "PctPopUrban" // PctPopUrban, PctPopMillUrb
 
 levels(Country), local(countries)

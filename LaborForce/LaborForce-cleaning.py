@@ -1,10 +1,11 @@
 import csv
 
-with open('long.csv', 'r') as f:
+with open('longEmp.csv', 'r') as f:
     reader = csv.reader(f)
     dataList = list(reader)
 
-with open('long-transformed.csv', 'a+', newline = '') as g:
+# newline = ''
+with open('longEmp-transformed.csv', 'a+') as g:
     writer = csv.writer(g)
 
     names = ['Year', 'CountryCode', 'Country']
@@ -19,7 +20,7 @@ with open('long-transformed.csv', 'a+', newline = '') as g:
             countries[entry[5]] = entry[4]
 
     obs = []
-    for i in range(1996, 2017):
+    for i in range(2002, 2017):
         for code, country in countries.items():
             obs.append(str(i))
             obs.append(code)

@@ -1,0 +1,16 @@
+use "/Users/caw6/Desktop/UrbanizationCauseConsequence/LaborForce/LForcePanel.dta", clear
+
+<<<<<<< HEAD
+collapse (sum) lforcetotal lforcepartymiloweight lforcepartyfiloweight, by(region year)
+=======
+collapse (sum) lforcetotal lforcepartymilototal lforcepartyfilototal, by(region year)
+>>>>>>> 5ba701e0e52500e43bb8575b3e60ae5fe919b60f
+drop if region == ""
+drop if year < 2005
+gen lforcepartymilo = lforcepartymilototal / lforcetotal
+gen lforcepartyfilo = lforcepartyfilototal / lforcetotal
+
+encode region, gen(rgn)
+xtset rgn year
+
+save "/Users/caw6/Desktop/UrbanizationCauseConsequence/LaborForce/LForcePanel_collapsed.dta", replace

@@ -1,0 +1,10 @@
+<<<<<<< HEAD
+//xtline lforcepartymilo if region == "NA" | region == "EUW" | region == "EUNE" overlay
+//line lforceymPct lforceyfPct year if region == "NA"
+xtline diff if region == "NA" | region == "KR", overlay
+=======
+//gen diff = lforcepartymilo - lforcepartyfilo
+
+xtline diff if region == "NA" | region == "LAN" | region == "LAS" | region == "BR", overlay
+
+>>>>>>> 5ba701e0e52500e43bb8575b3e60ae5fe919b60f

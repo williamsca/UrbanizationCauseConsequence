@@ -1,0 +1,888 @@
+********************************************************************************
+*														 	    *
+*            RATS CODE FOR BIVARIATE LONG RUN CAUSALITY TESTS 			    *
+*                    IN HETEROGENEOUS COINTEGRATED PANELS			 	    *
+*															    *
+*      Author: Peter Pedroni, Williams College, ppedroni@williams.edu	 	    *
+*															    *
+*                               REFERENCES:							    *
+*															    *
+*   Canning, C. and Pedroni, P. (2008)  " Infrastructure, Long Run Economic    *
+*   Growth and Causality Tests for Cointegrated Panels," The Manchester        *
+*   School Journal, Vol. 76, 504-527.								    *
+*															    *
+*   For first stage group mean FMOLS estimation:						    *
+*															    *
+*   Pedroni, Peter (2000) "Fully Modified OLS for Heterogeneous Cointegrated   *
+*   Panels," Advances in Econometrics, Vol. 15, 93-130, NONSTATIONARY PANELS,  *
+*   PANEL COINTEGRATION AND DYNAMIC PANELS, JAI Press.					    *
+*															    *
+********************************************************************************
+environment noecho
+
+                ***  USER INPUT SECTION ***
+
+compute subgroup = 'All'
+*compute subgroup = 'Asia'
+*compute subgroup = 'Africa'
+*compute subgroup = 'LatinAm'
+*compute subgroup = 'OECD'
+*compute subgroup = 'OtherEmerge'
+*compute subgroup = 'NonOECD'
+
+compute bootstrap = 1    ;* set to 1 to run bootstrap simulation for group median
+compute ndraws = 1000    ;* number of replications desired for bootstrap
+
+compute Nsecs = 22       ;* cross section dimension, N
+compute Tperiods = 56    ;* time series dimension, T
+
+                             ;* -see note below for unbalanced panels
+allocate 0 Nsecs*Tperiods    ;* set allocate to at least N*T
+compute Tdum = 1             ;* set to 1 to subtract time means, else 0
+compute unbal = 1            ;* set to 1 for unbalanced panel, else 0
+
+open data UrbGDPLCU.xls      ;* read stacked panel data from file
+data(org=obs,format=xls)     ;* one column of length N*T per variable
+close data
+
+dec vec[series] datavec(2)
+* Change this to be real variable names
+set datavec(2) = RealGDPNorm   ;*  name of LHS variable in data
+set datavec(1) = PctPopUrban  ;*  name of first RHS var in data
+
+dec vec[label] labelvec(2)
+compute labelvec(2) = 'Real GDP Norm'        ;* desired label for LHS variable
+compute labelvec(1) = 'Percent urbanized'    ;* desired label for first RHS variable
+
+* For unbalanced panels,  enter into your data set either blanks or the value NA
+* for missing values, so that the end result is that each member has uniform length T,
+* and the data is stacked into a column of length N*T
+*
+* Version 3:  Extended to allow bootstrap also for unbalanced panels
+*************************************************************************
+   * (do not change anything below this line for standard run) *
+
+compute m=1  ;*   IMPORTANT  do not change this value, the program is written only for this case
+compute Nafrica=50, NLatinAM=32, Nasia=28, NOECD=26, NotherEmerge=15, NNonOECD=126
+dec vec[label] ctrycode(152) Africacode(50) LatinAmcode(32) Asiacode(28) OECDcode(26) $
+               OtherEmergeCode(15) NonOECDcode(126)
+
+dec vec bvec(m)
+compute bvec = || 0.0, 0.0, 0.0||  ;* null values for slope vector
+compute ctrycode = || $
+'ALGERIA',$
+'ANGOLA',$
+'BENIN',$
+'BOTSWANA',$
+'BURKINA FASO',$
+'BURUNDI',$
+'CAMEROON',$
+'CAPE VERDE IS.',$
+'CENTRAL AFR.R.',$
+'CHAD',$
+'COMOROS',$
+'CONGO',$
+'DJIBOUTI',$
+'EGYPT',$
+'ETHIOPIA',$
+'GABON',$
+'GAMBIA',$
+'GHANA',$
+'GUINEA',$
+'GUINEA-BISS',$
+'IVORY COAST',$
+'KENYA',$
+'LESOTHO',$
+'LIBERIA',$
+'MADAGASCAR',$
+'MALAWI',$
+'MALI',$
+'MAURITANIA',$
+'MAURITIUS',$
+'MOROCCO',$
+'MOZAMBIQUE',$
+'NAMIBIA',$
+'NIGER',$
+'NIGERIA',$
+'REUNION',$
+'RWANDA',$
+'SENEGAL',$
+'SEYCHELLES',$
+'SIERRA LEONE',$
+'SOMALIA',$
+'SOUTH AFRICA',$
+'SUDAN',$
+'SWAZILAND',$
+'TANZANIA',$
+'TOGO',$
+'TUNISIA',$
+'UGANDA',$
+'ZAIRE',$
+'ZAMBIA',$
+'ZIMBABWE',$
+'BAHAMAS',$
+'BARBADOS',$
+'BELIZE',$
+'CANADA',$
+'COSTA RICA',$
+'DOMINICA',$
+'DOMINICAN REP.',$
+'EL SALVADOR',$
+'GRENADA',$
+'GUATEMALA',$
+'HAITI',$
+'HONDURAS',$
+'JAMAICA',$
+'MEXICO',$
+'NICARAGUA',$
+'PANAMA',$
+'PUERTO RICO',$
+'ST.KITTS&NEVIS',$
+'ST.LUCIA',$
+'ST.VINCENT&GRE',$
+'TRINIDAD&TOBAGO',$
+'U.S.A.',$
+'ARGENTINA',$
+'BOLIVIA',$
+'BRAZIL',$
+'CHILE',$
+'COLOMBIA',$
+'ECUADOR',$
+'GUYANA',$
+'PARAGUAY',$
+'PERU',$
+'SURINAME',$
+'URUGUAY',$
+'VENEZUELA',$
+'BAHRAIN',$
+'BANGLADESH',$
+'BHUTAN',$
+'CHINA',$
+'HONG KONG',$
+'INDIA',$
+'INDONESIA',$
+'IRAN',$
+'IRAQ',$
+'ISRAEL',$
+'JAPAN',$
+'JORDAN',$
+'KOREA, REP.',$
+'KUWAIT',$
+'LAOS',$
+'MALAYSIA',$
+'MONGOLIA',$
+'MYANMAR',$
+'NEPAL',$
+'OMAN',$
+'PAKISTAN',$
+'PHILIPPINES',$
+'QATAR',$
+'SAUDI ARABIA',$
+'SINGAPORE',$
+'SRI LANKA',$
+'SYRIA',$
+'TAIWAN',$
+'THAILAND',$
+'UNITED ARAB E.',$
+'YEMEN',$
+'AUSTRIA',$
+'BELGIUM',$
+'BULGARIA',$
+'CYPRUS',$
+'CZECHOSLOVAKIA',$
+'DENMARK',$
+'FINLAND',$
+'FRANCE',$
+'GERMANY, EAST',$
+'GERMANY, WEST',$
+'GREECE',$
+'HUNGARY',$
+'ICELAND',$
+'IRELAND',$
+'ITALY',$
+'LUXEMBOURG',$
+'MALTA',$
+'NETHERLANDS',$
+'NORWAY',$
+'POLAND',$
+'PORTUGAL',$
+'ROMANIA',$
+'SPAIN',$
+'SWEDEN',$
+'SWITZERLAND',$
+'TURKEY',$
+'U.K.',$
+'U.S.S.R.',$
+'YUGOSLAVIA',$
+'AUSTRALIA',$
+'FIJI',$
+'NEW ZEALAND',$
+'PAPUA N.GUINEA',$
+'SOLOMON IS.',$
+'TONGA',$
+'VANUATU',$
+'WESTERN SAMOA' ||
+
+compute Africacode = || $
+'ALGERIA',$
+'ANGOLA',$
+'BENIN',$
+'BOTSWANA',$
+'BURKINA FASO',$
+'BURUNDI',$
+'CAMEROON',$
+'CAPE VERDE IS.',$
+'CENTRAL AFR.R.',$
+'CHAD',$
+'COMOROS',$
+'CONGO',$
+'DJIBOUTI',$
+'EGYPT',$
+'ETHIOPIA',$
+'GABON',$
+'GAMBIA',$
+'GHANA',$
+'GUINEA',$
+'GUINEA-BISS',$
+'IVORY COAST',$
+'KENYA',$
+'LESOTHO',$
+'LIBERIA',$
+'MADAGASCAR',$
+'MALAWI',$
+'MALI',$
+'MAURITANIA',$
+'MAURITIUS',$
+'MOROCCO',$
+'MOZAMBIQUE',$
+'NAMIBIA',$
+'NIGER',$
+'NIGERIA',$
+'REUNION',$
+'RWANDA',$
+'SENEGAL',$
+'SEYCHELLES',$
+'SIERRA LEONE',$
+'SOMALIA',$
+'SOUTH AFRICA',$
+'SUDAN',$
+'SWAZILAND',$
+'TANZANIA',$
+'TOGO',$
+'TUNISIA',$
+'UGANDA',$
+'ZAIRE',$
+'ZAMBIA',$
+'ZIMBABWE'||
+
+compute LatinAmcode = || $
+'BAHAMAS',$
+'BARBADOS',$
+'BELIZE',$
+'COSTA RICA',$
+'DOMINICA',$
+'DOMINICAN REP.',$
+'EL SALVADOR',$
+'GRENADA',$
+'GUATEMALA',$
+'HAITI',$
+'HONDURAS',$
+'JAMAICA',$
+'MEXICO',$
+'NICARAGUA',$
+'PANAMA',$
+'PUERTO RICO',$
+'ST.KITTS&NEVIS',$
+'ST.LUCIA',$
+'ST.VINCENT&GRE',$
+'TRINIDAD&TOBAGO',$
+'ARGENTINA',$
+'BOLIVIA',$
+'BRAZIL',$
+'CHILE',$
+'COLOMBIA',$
+'ECUADOR',$
+'GUYANA',$
+'PARAGUAY',$
+'PERU',$
+'SURINAME',$
+'URUGUAY',$
+'VENEZUELA' ||
+
+compute Asiacode = || $
+'BAHRAIN',$
+'BANGLADESH',$
+'BHUTAN',$
+'CHINA',$
+'HONG KONG',$
+'INDIA',$
+'INDONESIA',$
+'IRAN',$
+'IRAQ',$
+'JORDAN',$
+'KUWAIT',$
+'LAOS',$
+'MALAYSIA',$
+'MONGOLIA',$
+'MYANMAR',$
+'NEPAL',$
+'OMAN',$
+'PAKISTAN',$
+'PHILIPPINES',$
+'QATAR',$
+'SAUDI ARABIA',$
+'SINGAPORE',$
+'SRI LANKA',$
+'SYRIA',$
+'TAIWAN',$
+'THAILAND',$
+'UNITED ARAB E.',$
+'YEMEN'||
+
+compute OECDcode = || $
+'CANADA',$
+'U.S.A.',$
+'ISRAEL',$
+'JAPAN',$
+'KOREA, REP.',$
+'AUSTRIA',$
+'BELGIUM',$
+'DENMARK',$
+'FINLAND',$
+'FRANCE',$
+'GERMANY, WEST',$
+'GREECE',$
+'ICELAND',$
+'IRELAND',$
+'ITALY',$
+'LUXEMBOURG',$
+'NETHERLANDS',$
+'NORWAY',$
+'PORTUGAL',$
+'SPAIN',$
+'SWEDEN',$
+'SWITZERLAND',$
+'TURKEY',$
+'U.K.',$
+'AUSTRALIA',$
+'NEW ZEALAND'||
+
+compute OtherEmergecode = || $
+'BULGARIA',$
+'CYPRUS',$
+'CZECHOSLOVAKIA',$
+'GERMANY, EAST',$
+'HUNGARY',$
+'MALTA',$
+'ROMANIA',$
+'U.S.S.R.',$
+'YUGOSLAVIA',$
+'FIJI',$
+'PAPUA N.GUINEA',$
+'SOLOMON IS.',$
+'TONGA',$
+'VANUATU',$
+'WESTERN SAMOA' ||
+
+compute NonOECDcode = || $
+'ALGERIA',$
+'ANGOLA',$
+'BENIN',$
+'BOTSWANA',$
+'BURKINA FASO',$
+'BURUNDI',$
+'CAMEROON',$
+'CAPE VERDE IS.',$
+'CENTRAL AFR.R.',$
+'CHAD',$
+'COMOROS',$
+'CONGO',$
+'DJIBOUTI',$
+'EGYPT',$
+'ETHIOPIA',$
+'GABON',$
+'GAMBIA',$
+'GHANA',$
+'GUINEA',$
+'GUINEA-BISS',$
+'IVORY COAST',$
+'KENYA',$
+'LESOTHO',$
+'LIBERIA',$
+'MADAGASCAR',$
+'MALAWI',$
+'MALI',$
+'MAURITANIA',$
+'MAURITIUS',$
+'MOROCCO',$
+'MOZAMBIQUE',$
+'NAMIBIA',$
+'NIGER',$
+'NIGERIA',$
+'REUNION',$
+'RWANDA',$
+'SENEGAL',$
+'SEYCHELLES',$
+'SIERRA LEONE',$
+'SOMALIA',$
+'SOUTH AFRICA',$
+'SUDAN',$
+'SWAZILAND',$
+'TANZANIA',$
+'TOGO',$
+'TUNISIA',$
+'UGANDA',$
+'ZAIRE',$
+'ZAMBIA',$
+'ZIMBABWE',$
+'BAHAMAS',$
+'BARBADOS',$
+'BELIZE',$
+'COSTA RICA',$
+'DOMINICA',$
+'DOMINICAN REP.',$
+'EL SALVADOR',$
+'GRENADA',$
+'GUATEMALA',$
+'HAITI',$
+'HONDURAS',$
+'JAMAICA',$
+'MEXICO',$
+'NICARAGUA',$
+'PANAMA',$
+'PUERTO RICO',$
+'ST.KITTS&NEVIS',$
+'ST.LUCIA',$
+'ST.VINCENT&GRE',$
+'TRINIDAD&TOBAGO',$
+'ARGENTINA',$
+'BOLIVIA',$
+'BRAZIL',$
+'CHILE',$
+'COLOMBIA',$
+'ECUADOR',$
+'GUYANA',$
+'PARAGUAY',$
+'PERU',$
+'SURINAME',$
+'URUGUAY',$
+'VENEZUELA',$
+'BAHRAIN',$
+'BANGLADESH',$
+'BHUTAN',$
+'CHINA',$
+'HONG KONG',$
+'INDIA',$
+'INDONESIA',$
+'IRAN',$
+'IRAQ',$
+'JORDAN',$
+'KUWAIT',$
+'LAOS',$
+'MALAYSIA',$
+'MONGOLIA',$
+'MYANMAR',$
+'NEPAL',$
+'OMAN',$
+'PAKISTAN',$
+'PHILIPPINES',$
+'QATAR',$
+'SAUDI ARABIA',$
+'SINGAPORE',$
+'SRI LANKA',$
+'SYRIA',$
+'TAIWAN',$
+'THAILAND',$
+'UNITED ARAB E.',$
+'YEMEN',$
+'BULGARIA',$
+'CYPRUS',$
+'CZECHOSLOVAKIA',$
+'GERMANY, EAST',$
+'HUNGARY',$
+'MALTA',$
+'POLAND',$
+'ROMANIA',$
+'U.S.S.R.',$
+'YUGOSLAVIA',$
+'FIJI',$
+'PAPUA N.GUINEA',$
+'SOLOMON IS.',$
+'TONGA',$
+'VANUATU',$
+'WESTERN SAMOA' ||
+
+
+*write ctrycode africacode LatinAmcode Asiacode OECDcode otheremergecode
+
+
+                        *** MAIN SOURCE CODE ***
+
+display ' '
+display '      Currently computing panel statistics. Please wait. '
+display ' '
+
+dec vec[real] temp(m) tden(m) iFMOLS(m) iFMtstat(m) itemp1(m) $
+              pfg(m) pfgt(m) O21(m) G21(m) G12(m) V21(m)
+dec rect[real] gammastar(1,m) gXX(m,m) ytemp(1,1) $
+              O22(m,m) G22(m,m) V22(m,m)
+dec vec[series] xvec(m) dxvec(m) indfm(m) indfmt(m) dvec(m+1) rvec(m+1) $
+               g21ser(m) g12ser(m) simsignratio(ndraws);* fmresids(Nsecs)
+dec rect[rect] G(2,2)
+dec rect[series] g22ser(m,m)
+dec vec W Tval
+dec vec Tvec(Nsecs)
+dec vec[integer] codepicks(Nsecs)
+dec vec[label] ctrypicks(Nsecs)
+
+if Tdum == 1
+{
+calendar(panelobs=Tperiods)
+do K=1,m
+  panel(entry=1.0,time=-1.0) datavec(K) 1 Tperiods*Nsecs datavec(K)
+end do K
+calendar
+}
+end if
+
+ewise pfg(i) = 0.0
+ewise pfgt(i) = 0.0
+
+do J=1,Nsecs
+compute a = (J-1)*tperiods + 1
+compute b = a + tperiods - 1
+linreg(noprint) datavec(1) a b
+# constant
+compute tvec(J) = %nobs
+
+set codeseries 1 Tperiods = code(T+(J-1)*Tperiods)
+compute codepicks(J) = fix(codeseries(1))
+compute ctrypicks(J) = ctrycode(codepicks(J))
+end do J
+
+
+do J=1,Nsecs
+
+compute mlag = fix(%round((4.0*(Tvec(J)/100.0)**(2.0/9.0)),0))
+*write 4.0*(Tvec(J)/100.0)**(2.0/9.0)
+*write mlag
+
+do K=1,M+1
+    set dvec(K) 1 Tperiods = datavec(K)(T+ (j-1)*tperiods)
+    diff dvec(K) 2 Tperiods rvec(K)
+    diff(center) rvec(k) 2 tperiods rvec(K)
+  end do K
+
+  do K=1,M
+    set xvec(K) 1 Tperiods = dvec(K+1)
+    set dxvec(K) 2 Tperiods = rvec(K+1)
+  end do K
+
+   linreg(noprint) dvec(1) 2 Tperiods ehat
+      # dvec(2) to dvec(m+1) constant
+
+set rvec(1) =  ehat
+
+compute maxlag = mlag
+VCV(matrix=V,noprint) 2 Tperiods
+  # rvec(1) to rvec(m+1)
+mcov(damp=1.0,lags=maxlag,noprint) 2 Tperiods
+  # rvec(1) to rvec(m+1)
+
+compute O11 = (1.0/(Tperiods-1.0))*%CMOM(1,1)
+do q=1,m
+compute O21(q)= (1.0/(Tperiods-1.0))*%CMOM(q+1,1)
+compute V21(q)= V(q+1,1)
+do r=1,m
+compute O22(q,r) = (1.0/(Tperiods-1.0))*%CMOM(q+1,r+1)
+compute V22(q,r) = V(q+1,r+1)
+end do q; end do r
+
+compute maxlag = mlag
+dimension W(maxlag)
+do I=1,maxlag
+compute W(I) = 1.0 - I/(maxlag+1.0)
+end do I
+
+cross(covariances,noprint) rvec(1) rvec(1) 2 Tperiods 1 maxlag $
+        g11ser
+do q=1,m
+cross(covariances,noprint) rvec(q+1) rvec(1) 2 Tperiods 1 maxlag $
+        g21ser(q)
+cross(covariances,noprint) rvec(1) rvec(q+1) 2 Tperiods 1 maxlag $
+        g12ser(q)
+do r=1,m
+cross(covariances,noprint) rvec(q+1) rvec(r+1) 2 Tperiods 1 maxlag $
+        g22ser(q,r)
+end do q ; end do r
+
+make g11vec 1 maxlag maxlag
+# g11ser
+compute G(1,1) = %scalar(tr(W)*g11vec)
+do q=1,m
+make g21vec 1 maxlag maxlag
+# g21ser(q)
+compute G21(q) = %scalar(tr(W)*g21vec)
+make g12vec 1 maxlag maxlag
+# g12ser(q)
+compute G12(q) = %scalar(tr(W)*g12vec)
+do r=1,m
+make g22vec 1 maxlag maxlag
+# g22ser(q,r)
+compute G22(q,r) = %scalar(tr(W)*g22vec)
+end do q ; end do r
+
+do s=2,Tperiods
+   ewise temp(I) = dxvec(I)(s)
+   compute ytemp = tr(o21)*inv(o22)*temp
+   set ystar s s = dvec(1) - ytemp(1,1)
+end do s
+
+compute term1 = tr(G12+V21)
+compute term2 = tr(o21)*inv(o22)*(G22+V22)
+compute gammastar = term1 - term2
+
+linreg(noprint) ystar 2 Tperiods
+# xvec(1) to xvec(m) constant
+
+ewise gXX(I,J) = %XX(I,J)
+ewise itemp1(I) = %beta(I)
+compute itemp2 = (Tperiods-1.0)*gammastar*gXX
+compute iFMOLS = itemp1 - tr(itemp2)
+ewise tden(I) = sqrt(%XX(I,I)*o11)
+ewise iFMtstat(I) = (iFMOLS(I)-bvec(I))/tden(I)
+
+do k=1,m
+  set indfm(k) J J = iFMOLS(k)
+  set indfmt(k) J J = iFMtstat(k)
+end do k
+
+compute pfg = pfg + iFMOLS
+compute pfgt = pfgt + iFMtstat
+
+dofor k=ehat rvec(1) ystar
+set k 1 Tperiods = %NA
+end dofor k
+
+set tempres 1 Tperiods = dvec(1) - indfm(1)(J)*dvec(2)
+
+linreg(noprint) tempres 1 Tperiods fmresids
+# constant
+
+do k=1,m+1
+    diff dvec(K) 2 Tperiods rvec(K)
+end do K
+
+linreg(noprint) rvec(1) 2 Tperiods vecmresid1
+# fmresids{1} rvec(1){1 to maxlag} rvec(2){1 to maxlag} constant
+equation(lastreg) vecm1
+
+set indlambda1 J J = %beta(1)
+set indtstat1 J J = %beta(1)/sqrt(%seesq*%xx(1,1))
+cdf(noprint) ttest %beta(1)/sqrt(%seesq*%xx(1,1)) %ndf
+  set indpval1t J J = %signif
+cdf(noprint) normal %beta(1)/sqrt(%seesq*%xx(1,1)) %ndf
+  set indpval1n J J = %signif
+
+linreg(noprint) rvec(2) 2 Tperiods vecmresid2
+# fmresids{1} rvec(1){1 to maxlag} rvec(2){1 to maxlag} constant
+equation(lastreg) vecm2
+
+set indlambda2 J J = %beta(1)
+set indtstat2 J J = %beta(1)/sqrt(%seesq*%xx(1,1))
+cdf(noprint) ttest %beta(1)/sqrt(%seesq*%xx(1,1)) %ndf
+  set indpval2t J J = %signif
+cdf(noprint) normal %beta(1)/sqrt(%seesq*%xx(1,1)) %ndf
+  set indpval2n J J = %signif
+
+set indratio J J  = 0.0-indlambda2/indlambda1
+
+vcv(matrix=vecmcov,noprint)
+# vecmresid1 vecmresid2
+
+if bootstrap == 1
+{
+seed 1
+do draw=1,ndraws
+if draw == 1 ; { ; display 'simulation draw number' draw 'of' ndraws 'for member' J ; }
+if draw == ndraws/2 ; { ; display 'simulation draw number' draw 'of' ndraws 'for member' J ; }
+
+if unbal == 0
+{
+inquire(series=vecmresid1) startsim endsim
+simulate(results=simseries) 2 Tperiods maxlag+2 vecmcov
+# vecm1
+# vecm2
+}
+
+if unbal == 1
+{
+inquire(series=vecmresid1) startsim endsim
+simulate(results=simseries) 2 endsim startsim+1 vecmcov
+# vecm1
+# vecm2
+}
+
+
+linreg(noprint) simseries(1) 2 Tperiods vecmresid1
+# fmresids{1} simseries(1){1 to maxlag} simseries(2){1 to maxlag} constant
+set simlambda1 = %beta(1)
+
+linreg(noprint) simseries(2) 2 Tperiods vecmresid1
+# fmresids{1} simseries(1){1 to maxlag} simseries(2){1 to maxlag} constant
+set simlambda2 = %beta(1)
+
+set simsignratio(draw) J J = 0.0-simlambda2/simlambda1
+
+end do draw
+}
+
+end do J
+
+compute pfg = (1.0/Nsecs)*pfg
+compute pfgt = (1.0/sqrt(Nsecs))*pfgt
+
+
+***********************************************************************
+
+    *** DISPLAY INDIVIDUAL AND PANEL RESULTS ***
+
+display ' '
+display 'Dependent Variable :' labelvec(1)
+
+display ' '
+if tdum == 0 ; { ; display 'common time dummies NOT included' ; } ; end if
+if tdum == 1 ; { ; display 'common time dummies included' ; } ; end if
+display ' '
+display 'Null vector for t-stats is: ' ; write bvec
+display ' '
+display '            INDIVIDUAL FMOLS RESULTS'
+display '            (t-stats in parentheses)'
+display ' '
+
+display ' '
+display @2 'Member ' @+5 'Variable' @+14 'Coefficient' @+12 't-statistic'
+display @2 '**********' @+4 '***********' @+12 '**************' @+10 '***********'
+do i=1,Nsecs
+do k=1,m
+ display @5 'No.'+i @22 labelvec(k+1) @47 ##.## indfm(k)(i) @71 '(' ##.## indfmt(k)(i) ')'
+end do k
+display @2 '-----------' @+5 '-------------' @+12 '-----------------' @+10 '-------------'
+end do i
+display @2 '**********' @+4 '***********' @+12 '**************' @+10 '***********'
+display ' '
+*end do i
+
+*}
+display ' '
+display ' '
+
+display '       PANEL GROUP FMOLS RESULTS    '
+display ' '
+display @20 'Coefficient' @42 't-statistic'
+do k=1,m
+ display @10 labelvec(k+1) @21 ##.## pfg(k) @44 '(' ##.## pfgt(k) ')'
+end do k
+display ' '
+display ' '
+if unbal == 0
+{
+display '        Nsecs =' Nsecs ', Tperiods =' Tperiods $
+                    ', no. regressors =' M
+}
+end if
+if unbal == 1
+{
+display '        Nsecs =' Nsecs ', Tperiods = (unbalanced)' $
+                    ', no. regressors =' M
+}
+display '         ******************************************** '
+end if
+
+
+set logpval1n 1 Nsecs = log(indpval1n)
+set logpval1t 1 Nsecs = log(indpval1t)
+set logpval2n 1 Nsecs = log(indpval2n)
+set logpval2t 1 Nsecs = log(indpval2t)
+
+
+set subpick 1 Nsecs = 1.0
+
+if subgroup == 'Africa' ; {; compute subN = Nafrica ; compute subcode = Africacode; }; end if
+if subgroup == 'LatinAm' ; {; compute subN = NLatinAm ; compute subcode = LatinAmcode; }; end if
+if subgroup == 'Asia' ; {; compute subN = NAsia ; compute subcode = Asiacode; }; end if
+if subgroup == 'OECD' ; {; compute subN = NOECD ; compute subcode = OECDcode; }; end if
+if subgroup == 'OtherEmerge' ; {; compute subN = NOtherEmerge ; compute subcode = OtherEmergecode; }; end if
+if subgroup == 'NonOECD' ; {; compute subN = NNonOECD ; compute subcode = NonOECDcode; }; end if
+
+if subgroup .NE. 'All'
+{
+do i=1,Nsecs
+	do J=1,subN
+	set subpick i i = %if(ctrypicks(i) == subcode(j),1.0,%NA)
+           if subpick(i) == 1 ; {; break ; }
+	end do J
+end do i
+}
+end if
+
+compute Npick = %sum(subpick)
+
+
+dofor k = indlambda1 indtstat1 logpval1n logpval1t indlambda2 indtstat2 logpval2n logpval2t indratio $
+          indpval1n indpval1t indpval2n indpval2t simsignratio
+  set k 1 Nsecs = k{0}*subpick{0}
+end dofor k
+
+compute grouplambda1 = %sum(indlambda1)/Npick
+compute groupintstat1 = %sum(indtstat1)/Npick
+compute fisher1n = -2*%sum(logpval1n)
+compute fisher1t = -2*%sum(logpval1t)
+compute grouplambda2 = %sum(indlambda2)/Npick
+compute groupintstat2 = %sum(indtstat2)/Npick
+compute fisher2n = -2*%sum(logpval2n)
+compute fisher2t = -2*%sum(logpval2t)
+
+statistics(noprint,fractiles) indratio 1 Nsecs
+compute medsignratio = %median
+
+
+compute simmedianstd = %NA
+if bootstrap == 1
+{
+do draw=1,ndraws
+statistics(noprint,fractiles) simsignratio(draw) 1 Nsecs
+set simmedian draw draw = %median
+end do draw
+statistics(noprint,fractiles) simmedian 1 ndraws
+compute simmedianstd = sqrt(%variance)
+}
+end if
+
+
+
+		***** DISPLAY RESULTS *****
+display ' '
+display ' '
+display ' '
+display '	                ***** LONG RUN CAUSALITY TEST RESULTS ***** '
+display ' '
+display '                        for' subgroup 'subset of' fix(Npick) 'countries'
+display ' '
+do J=1,Nsecs
+display @2 ctrypicks(J) @19 ##.## indlambda2(J) @30 ##.## indtstat2(J) @36 '(' ##.## indpval2n(J) ')' $
+        @52 ##.## indlambda1(J) @60 ##.## indtstat1(J)  @66 '(' ##.## indpval1n(J) ')' @80 ####.## indratio(J)
+end do J
+
+display ' '
+display @2 'group mean' @19 ##.## grouplambda2 @30 ##.## groupintstat2 @36 '(' ##.## %cdf(groupintstat2) ')' $
+        @52 ##.## grouplambda1 @60 ##.## groupintstat1  @66 '(' ##.## %cdf(groupintstat1) ')' @80 ####.#### medsignratio
+
+display @2 'lambda-pearson' @19 ##.## ' ' @29 ###.## fisher2n @36 '(' ##.## %chisqr(fisher2n,2*Npick) ')' $
+        @52 ##.## ' ' @59 ###.## fisher1n  @66 '(' ##.## %chisqr(fisher1n,2*Npick) ')' @80 ##.#### $
+        '(' simmedianstd ')'
+
+display ' '
+display '    *********************************************************************************** '
+
+

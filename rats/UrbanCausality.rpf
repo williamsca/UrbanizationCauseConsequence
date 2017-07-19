@@ -33,26 +33,26 @@ compute subgroup = 'All'
 compute bootstrap = 1    ;* set to 1 to run bootstrap simulation for group median
 compute ndraws = 1000    ;* number of replications desired for bootstrap
 
-compute Nsecs = 22       ;* cross section dimension, N
+compute Nsecs = 13       ;* cross section dimension, N
 compute Tperiods = 56    ;* time series dimension, T
 
                              ;* -see note below for unbalanced panels
 allocate 0 Nsecs*Tperiods    ;* set allocate to at least N*T
-compute Tdum = 1             ;* set to 1 to subtract time means, else 0
+compute Tdum = 0             ;* set to 1 to subtract time means, else 0
 compute unbal = 1            ;* set to 1 for unbalanced panel, else 0
 
-open data UrbGDPLCU.xls      ;* read stacked panel data from file
+open data UrbGDPLCU_Total.xls      ;* read stacked panel data from file
 data(org=obs,format=xls)     ;* one column of length N*T per variable
 close data
 
 dec vec[series] datavec(2)
 * Change this to be real variable names
-set datavec(2) = RealGDPNorm   ;*  name of LHS variable in data
-set datavec(1) = PctPopUrban  ;*  name of first RHS var in data
+set datavec(1) = RealGDPNorm   ;*  name of LHS variable in data
+set datavec(2) = PctPopUrban  ;*  name of first RHS var in data
 
 dec vec[label] labelvec(2)
-compute labelvec(2) = 'Real GDP Norm'        ;* desired label for LHS variable
-compute labelvec(1) = 'Percent urbanized'    ;* desired label for first RHS variable
+compute labelvec(1) = 'Real Total GDP Norm Total LCU'        ;* desired label for LHS variable
+compute labelvec(2) = 'Percent urbanized'    ;* desired label for first RHS variable
 
 * For unbalanced panels,  enter into your data set either blanks or the value NA
 * for missing values, so that the end result is that each member has uniform length T,

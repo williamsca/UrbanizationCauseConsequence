@@ -10,8 +10,8 @@ gen byte cointegrated = 0
 scalar criticalValue = -4.0
 local testSpec "trend"
 local column "B"
-local indVar "cum_Govt" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
-local depVar "PctPopUrban" // PctPopUrban, PctPopMillUrb
+local indVar "PctPopUrban" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
+local depVar "cum_RuleLaw" // PctPopUrban, PctPopMillUrb
 
 levels(Country), local(countries)
 //putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/WGICointegration_results_fixed.xlsx", modify sheet(`indVar'`depVar')

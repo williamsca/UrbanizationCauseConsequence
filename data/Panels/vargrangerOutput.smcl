@@ -1,0 +1,168 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/caw6/Desktop/UrbanizationCauseConsequence/data/Panels/vargrangerOutput.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}19 Jul 2017, 09:11:03
+
+{com}. do "/var/folders/fg/cv_vxr2s13z3jnnfdkns7ty9sxldbg/T//SD39463.000000"
+{txt}
+{com}. //bysort Country (Year): var PctPopUrban GDPPerCapRealLCU 
+. use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/Panels/Panel2.dta", clear
+{txt}
+{com}. set more off
+{txt}
+{com}. 
+. local depVar "PctPopUrban"
+{txt}
+{com}. local indVar "GDPPerCapRealLCU"
+{txt}
+{com}. /*
+> putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Vargranger_results.xlsx", modify sheet("GDPRealLCU")
+> 
+> levels(Country), local(countries)
+> 
+> putexcel A1 = "Country"
+> putexcel B1 = "GDPPerCap -> PctUrb chi2"
+> putexcel C1 = "Prob > chi2"
+> putexcel D1 = "PctUrb -> GDPPerCap chi2"
+> putexcel E1 = "Prob > chi2"
+> local i "2"
+> foreach country of local countries {c -(}
+>         putexcel A`i' = ("`country'")
+>         local ++i
+> {c )-}
+> 
+> local row "2"
+> foreach country of local countries {c -(}
+>         quietly var PctPopUrban GDPPerCapRealUSD if Country == "`country'"
+>         vargranger 
+>         mat results = r(gstats)
+>         putexcel B`row' = results[1,1]
+>         putexcel C`row' = results[1,3]
+>         putexcel D`row' = results[3,1]
+>         putexcel E`row' = results[3,3]
+>         local ++row
+> {c )-}*/
+. 
+. var `depVar' `indVar' if Country == "Australia"
+{res}
+{txt}Vector autoregression
+
+{col 1}Sample:  {res}1962 - 2015 {txt}{col 49}Number of obs{col 67}= {res}        54
+{txt}Log likelihood =  {res}-327.1226{txt}{col 38}{col 49}AIC{col 67}=  {res} 12.48602
+{txt}FPE{col 16}=  {res} 908.0785{txt}{col 49}HQIC{col 67}=  {res} 12.62807
+{txt}Det(Sigma_ml){col 16}=  {res}  626.342{txt}{col 49}SBIC{col 67}=  {res} 12.85435
+
+{col 1}{text}Equation        {col 18}  Parms{col 26}     RMSE {col 37}   R-sq  {col 47}   chi2   {col 58} P>chi2
+{col 1}{text}{hline 17}{hline 8}{hline 11}{hline 10}{hline 11}{hline 7}
+{col 1}{text}PctPopUrban     {col 18}{result}     5{col 26}{space 2} .041998{col 37}{space 1} 0.9994{col 47} 92949.32{col 58} 0.0000
+{col 1}{text}GDPPerCapRealLCU{col 18}{result}     5{col 26}{space 2} 658.172{col 37}{space 1} 0.9977{col 47} 23704.96{col 58} 0.0000
+{col 1}{text}{hline 17}{hline 8}{hline 11}{hline 10}{hline 11}{hline 7}
+
+{res}{txt}{hline 17}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 18}{c |}      Coef.{col 30}   Std. Err.{col 42}      z{col 50}   P>|z|{col 58}     [95% Con{col 71}f. Interval]
+{hline 17}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}PctPopUrban      {txt}{c |}
+{space 5}PctPopUrban {c |}
+{space 13}L1. {c |}{col 18}{res}{space 2} 1.823345{col 30}{space 2} .0465018{col 41}{space 1}   39.21{col 50}{space 3}0.000{col 58}{space 4} 1.732203{col 71}{space 3} 1.914487
+{txt}{space 13}L2. {c |}{col 18}{res}{space 2}-.8616195{col 30}{space 2} .0419098{col 41}{space 1}  -20.56{col 50}{space 3}0.000{col 58}{space 4}-.9437612{col 71}{space 3}-.7794778
+{txt}{space 16} {c |}
+GDPPerCapRealLCU {c |}
+{space 13}L1. {c |}{col 18}{res}{space 2} 3.35e-06{col 30}{space 2} 8.47e-06{col 41}{space 1}    0.40{col 50}{space 3}0.692{col 58}{space 4}-.0000133{col 71}{space 3}   .00002
+{txt}{space 13}L2. {c |}{col 18}{res}{space 2} 1.51e-06{col 30}{space 2} 8.54e-06{col 41}{space 1}    0.18{col 50}{space 3}0.860{col 58}{space 4}-.0000152{col 71}{space 3} .0000182
+{txt}{space 16} {c |}
+{space 11}_cons {c |}{col 18}{res}{space 2} 3.096357{col 30}{space 2} .8058185{col 41}{space 1}    3.84{col 50}{space 3}0.000{col 58}{space 4} 1.516982{col 71}{space 3} 4.675733
+{txt}{hline 17}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}GDPPerCapRealLCU {txt}{c |}
+{space 5}PctPopUrban {c |}
+{space 13}L1. {c |}{col 18}{res}{space 2} 1100.013{col 30}{space 2} 728.7531{col 41}{space 1}    1.51{col 50}{space 3}0.131{col 58}{space 4}-328.3164{col 71}{space 3} 2528.343
+{txt}{space 13}L2. {c |}{col 18}{res}{space 2}-1077.772{col 30}{space 2} 656.7898{col 41}{space 1}   -1.64{col 50}{space 3}0.101{col 58}{space 4}-2365.057{col 71}{space 3} 209.5119
+{txt}{space 16} {c |}
+GDPPerCapRealLCU {c |}
+{space 13}L1. {c |}{col 18}{res}{space 2} 1.151296{col 30}{space 2} .1327698{col 41}{space 1}    8.67{col 50}{space 3}0.000{col 58}{space 4} .8910721{col 71}{space 3}  1.41152
+{txt}{space 13}L2. {c |}{col 18}{res}{space 2}-.1470099{col 30}{space 2} .1338175{col 41}{space 1}   -1.10{col 50}{space 3}0.272{col 58}{space 4}-.4092874{col 71}{space 3} .1152675
+{txt}{space 16} {c |}
+{space 11}_cons {c |}{col 18}{res}{space 2}-1562.793{col 30}{space 2} 12628.39{col 41}{space 1}   -0.12{col 50}{space 3}0.902{col 58}{space 4}-26313.98{col 71}{space 3}  23188.4
+{txt}{hline 17}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. vargranger
+
+{txt}{col 4}Granger causality Wald tests
+{col 3}{text}{c TLC}{hline 19}{hline 19}{c TT}{hline 9}{hline 6}{hline 12}{c TRC}
+{col 3}{text}{c |}          Equation{col 23}          Excluded{col 42}{c |}   chi2 {col 52}   df{col 58}Prob > chi2{col 70}{c |}
+{col 3}{text}{c LT}{hline 19}{hline 19}{c +}{hline 9}{hline 6}{hline 12}{c RT}
+{col 3}{text}{c |}       PctPopUrban{col 23}  GDPPerCapRealLCU{col 42}{c |}{result}{space 1} 14.958{col 52}    2{col 58}{space 2} 0.001{col 70}{text}{c |}
+{col 3}{text}{c |}       PctPopUrban{col 23}               ALL{col 42}{c |}{result}{space 1} 14.958{col 52}    2{col 58}{space 2} 0.001{col 70}{text}{c |}
+{col 3}{text}{c LT}{hline 19}{hline 19}{c +}{hline 9}{hline 6}{hline 12}{c RT}
+{col 3}{text}{c |}  GDPPerCapRealLCU{col 23}       PctPopUrban{col 42}{c |}{result}{space 1} 2.9407{col 52}    2{col 58}{space 2} 0.230{col 70}{text}{c |}
+{col 3}{text}{c |}  GDPPerCapRealLCU{col 23}               ALL{col 42}{c |}{result}{space 1} 2.9407{col 52}    2{col 58}{space 2} 0.230{col 70}{text}{c |}
+{col 3}{text}{c BLC}{hline 19}{hline 19}{c BT}{hline 9}{hline 6}{hline 12}{c BRC}
+
+{com}. 
+. var `depVar' `indVar' if Country == "Myanmar"
+{res}
+{txt}Vector autoregression
+
+{col 1}Sample:  {res}1962 - 2015 {txt}{col 49}Number of obs{col 67}= {res}        54
+{txt}Log likelihood =  {res}-468.3361{txt}{col 38}{col 49}AIC{col 67}=  {res} 17.71615
+{txt}FPE{col 16}=  {res} 169644.7{txt}{col 49}HQIC{col 67}=  {res}  17.8582
+{txt}Det(Sigma_ml){col 16}=  {res} 117011.4{txt}{col 49}SBIC{col 67}=  {res} 18.08448
+
+{col 1}{text}Equation        {col 18}  Parms{col 26}     RMSE {col 37}   R-sq  {col 47}   chi2   {col 58} P>chi2
+{col 1}{text}{hline 17}{hline 8}{hline 11}{hline 10}{hline 11}{hline 7}
+{col 1}{text}PctPopUrban     {col 18}{result}     5{col 26}{space 2} .043517{col 37}{space 1} 0.9999{col 47} 381320.3{col 58} 0.0000
+{col 1}{text}GDPPerCapRealLCU{col 18}{result}     5{col 26}{space 2} 8683.11{col 37}{space 1} 0.9989{col 47}  50699.9{col 58} 0.0000
+{col 1}{text}{hline 17}{hline 8}{hline 11}{hline 10}{hline 11}{hline 7}
+
+{res}{txt}{hline 17}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 18}{c |}      Coef.{col 30}   Std. Err.{col 42}      z{col 50}   P>|z|{col 58}     [95% Con{col 71}f. Interval]
+{hline 17}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}PctPopUrban      {txt}{c |}
+{space 5}PctPopUrban {c |}
+{space 13}L1. {c |}{col 18}{res}{space 2} 1.924567{col 30}{space 2} .0502774{col 41}{space 1}   38.28{col 50}{space 3}0.000{col 58}{space 4} 1.826025{col 71}{space 3} 2.023109
+{txt}{space 13}L2. {c |}{col 18}{res}{space 2}-.9269895{col 30}{space 2} .0480432{col 41}{space 1}  -19.29{col 50}{space 3}0.000{col 58}{space 4}-1.021152{col 71}{space 3}-.8328265
+{txt}{space 16} {c |}
+GDPPerCapRealLCU {c |}
+{space 13}L1. {c |}{col 18}{res}{space 2} 9.96e-07{col 30}{space 2} 6.02e-07{col 41}{space 1}    1.65{col 50}{space 3}0.098{col 58}{space 4}-1.85e-07{col 71}{space 3} 2.18e-06
+{txt}{space 13}L2. {c |}{col 18}{res}{space 2}-9.93e-07{col 30}{space 2} 6.18e-07{col 41}{space 1}   -1.61{col 50}{space 3}0.108{col 58}{space 4}-2.20e-06{col 71}{space 3} 2.18e-07
+{txt}{space 16} {c |}
+{space 11}_cons {c |}{col 18}{res}{space 2} .0682202{col 30}{space 2} .1105362{col 41}{space 1}    0.62{col 50}{space 3}0.537{col 58}{space 4}-.1484267{col 71}{space 3} .2848671
+{txt}{hline 17}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}GDPPerCapRealLCU {txt}{c |}
+{space 5}PctPopUrban {c |}
+{space 13}L1. {c |}{col 18}{res}{space 2} 25718.16{col 30}{space 2} 10031.93{col 41}{space 1}    2.56{col 50}{space 3}0.010{col 58}{space 4} 6055.928{col 71}{space 3} 45380.38
+{txt}{space 13}L2. {c |}{col 18}{res}{space 2}-22870.78{col 30}{space 2} 9586.137{col 41}{space 1}   -2.39{col 50}{space 3}0.017{col 58}{space 4}-41659.26{col 71}{space 3}-4082.293
+{txt}{space 16} {c |}
+GDPPerCapRealLCU {c |}
+{space 13}L1. {c |}{col 18}{res}{space 2} 1.514673{col 30}{space 2} .1201888{col 41}{space 1}   12.60{col 50}{space 3}0.000{col 58}{space 4} 1.279107{col 71}{space 3} 1.750239
+{txt}{space 13}L2. {c |}{col 18}{res}{space 2}-.5210764{col 30}{space 2}  .123332{col 41}{space 1}   -4.22{col 50}{space 3}0.000{col 58}{space 4}-.7628026{col 71}{space 3}-.2793502
+{txt}{space 16} {c |}
+{space 11}_cons {c |}{col 18}{res}{space 2}-67783.02{col 30}{space 2} 22055.46{col 41}{space 1}   -3.07{col 50}{space 3}0.002{col 58}{space 4}-111010.9{col 71}{space 3}-24555.11
+{txt}{hline 17}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. vargranger
+
+{txt}{col 4}Granger causality Wald tests
+{col 3}{text}{c TLC}{hline 19}{hline 19}{c TT}{hline 9}{hline 6}{hline 12}{c TRC}
+{col 3}{text}{c |}          Equation{col 23}          Excluded{col 42}{c |}   chi2 {col 52}   df{col 58}Prob > chi2{col 70}{c |}
+{col 3}{text}{c LT}{hline 19}{hline 19}{c +}{hline 9}{hline 6}{hline 12}{c RT}
+{col 3}{text}{c |}       PctPopUrban{col 23}  GDPPerCapRealLCU{col 42}{c |}{result}{space 1} 2.8055{col 52}    2{col 58}{space 2} 0.246{col 70}{text}{c |}
+{col 3}{text}{c |}       PctPopUrban{col 23}               ALL{col 42}{c |}{result}{space 1} 2.8055{col 52}    2{col 58}{space 2} 0.246{col 70}{text}{c |}
+{col 3}{text}{c LT}{hline 19}{hline 19}{c +}{hline 9}{hline 6}{hline 12}{c RT}
+{col 3}{text}{c |}  GDPPerCapRealLCU{col 23}       PctPopUrban{col 42}{c |}{result}{space 1} 10.256{col 52}    2{col 58}{space 2} 0.006{col 70}{text}{c |}
+{col 3}{text}{c |}  GDPPerCapRealLCU{col 23}               ALL{col 42}{c |}{result}{space 1} 10.256{col 52}    2{col 58}{space 2} 0.006{col 70}{text}{c |}
+{col 3}{text}{c BLC}{hline 19}{hline 19}{c BT}{hline 9}{hline 6}{hline 12}{c BRC}
+
+{com}. 
+. 
+{txt}end of do-file
+
+{com}. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/caw6/Desktop/UrbanizationCauseConsequence/data/Panels/vargrangerOutput.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}19 Jul 2017, 09:11:19
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

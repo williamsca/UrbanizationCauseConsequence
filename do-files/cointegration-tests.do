@@ -7,10 +7,10 @@ gen byte cointegrated = 0
 
 // N = 25, no trend: -3.635   ; with trend: -4.258
 // N = 45, no trend: −3.475	  ; with trend: −3.998
-scalar criticalValue = -4.258
+scalar criticalValue = -4.0
 local testSpec "trend"
 local column "B"
-local indVar "estimateRegQual" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
+local indVar "cum_Govt" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
 local depVar "PctPopUrban" // PctPopUrban, PctPopMillUrb
 
 levels(Country), local(countries)

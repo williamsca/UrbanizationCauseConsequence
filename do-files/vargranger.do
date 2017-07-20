@@ -1,10 +1,10 @@
 //bysort Country (Year): var PctPopUrban GDPPerCapRealLCU 
-use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/Panels/Panel4.dta", clear
+use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/Panels/Panel2.dta", clear
 set more off
 
 local depVar "PctPopUrban"
-local indVar "GDPRealLCU"
-
+local indVar "GDPPerCapRealLCU"
+/*
 putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Vargranger_results.xlsx", modify sheet("GDPRealLCU")
 
 levels(Country), local(countries)
@@ -30,8 +30,11 @@ foreach country of local countries {
 	putexcel D`row' = results[3,1]
 	putexcel E`row' = results[3,3]
 	local ++row
-}
-/*
-var `depVar' `indVar' if Country == "Suriname"
+}*/
+
+var `depVar' `indVar' if Country == "Australia"
 vargranger
-*/
+
+var `depVar' `indVar' if Country == "Myanmar"
+vargranger
+

@@ -31,7 +31,7 @@ gen residuals = .
 //putexcel `column'1 = "`testSpec'"
 local row "2"
 foreach country of local countries {
-	quietly capture regress `indVar' `depVar' if Country == "`country'"
+	quietly capture regress `depVar' `indVar' if Country == "`country'"
 	
 	capture predict temp if Country == "`country'", res
 	capture replace residuals = temp if temp ~= .
@@ -56,8 +56,8 @@ foreach country of local countries {
 tab Country if cointegrated == 1
 
 // A panel cointegration test indicates  cointegration:
-//xtpedroni `indVar' `depVar' if cointegrated == 1
-xtpedroni `indVar' `depVar' if cointegrated == 1, trend
+xtpedroni `depVar' `indVar' if cointegrated == 1
+// xtpedroni `depVar' `indVar' if cointegrated == 1, trend
 
 /*
 // Single case with graphs

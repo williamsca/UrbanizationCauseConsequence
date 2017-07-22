@@ -18,3 +18,13 @@ legend(off) ytick(100) note("") ///
 //graph export `var'"_2".pdf
 drop first*
 //drop indx*
+/*
+Country
+France
+Belgium
+Iceland
+Australia
+Germany
+United Kingdom
+Switzerland
+*/

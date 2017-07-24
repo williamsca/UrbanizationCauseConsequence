@@ -1,8 +1,8 @@
 // gen cumulative WGI variables
-local var "Govt"
+local var "PctPopUrban"
 sort Country Year
-by Country: replace cum_`var' = sum(estimate`var'  + 3)
-replace cum_`var' = . if cum_`var' == 0
+by Country: replace cum_PctUrb = sum(`var')
+replace cum_PctUrb = . if cum_PctUrb == 0
 
 // Year smoothing
 /*

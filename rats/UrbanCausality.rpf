@@ -33,26 +33,26 @@ compute subgroup = 'All'
 compute bootstrap = 1    ;* set to 1 to run bootstrap simulation for group median
 compute ndraws = 1000    ;* number of replications desired for bootstrap
 
-compute Nsecs = 10       ;* cross section dimension, N
-compute Tperiods = 14    ;* time series dimension, T
+compute Nsecs = 25       ;* cross section dimension, N
+compute Tperiods = 20    ;* time series dimension, T
 
                              ;* -see note below for unbalanced panels
 allocate 0 Nsecs*Tperiods    ;* set allocate to at least N*T
-compute Tdum = 1             ;* set to 1 to subtract time means, else 0
+compute Tdum = 0             ;* set to 1 to subtract time means, else 0
 compute unbal = 1            ;* set to 1 for unbalanced panel, else 0
 
-open data UrbGovt.xls      ;* read stacked panel data from file
+open data UrbVA_cum.xls      ;* read stacked panel data from file
 data(org=obs,format=xls)     ;* one column of length N*T per variable
 close data
 
 dec vec[series] datavec(2)
 * Change this to be real variable names
-set datavec(1) = estimateGovt   ;*  name of LHS variable in data
-set datavec(2) = PctPopUrban  ;*  name of first RHS var in data
+set datavec(2) = cum_PctUrb   ;*  name of LHS variable in data
+set datavec(1) = cum_VA       ;*  name of first RHS var in data
 
 dec vec[label] labelvec(2)
-compute labelvec(1) = 'Government Effectiveness'        ;* desired label for LHS variable
-compute labelvec(2) = 'Percent urbanized'    ;* desired label for first RHS variable
+compute labelvec(2) = 'Percent urbanized'        ;* desired label for LHS variable
+compute labelvec(1) = 'Voice and Accountability'    ;* desired label for first RHS variable
 
 * For unbalanced panels,  enter into your data set either blanks or the value NA
 * for missing values, so that the end result is that each member has uniform length T,
@@ -884,5 +884,4 @@ display @2 'lambda-pearson' @19 ##.## ' ' @29 ###.## fisher2n @36 '(' ##.## %chi
 
 display ' '
 display '    *********************************************************************************** '
-
 

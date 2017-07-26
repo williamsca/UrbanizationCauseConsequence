@@ -4,8 +4,8 @@ set more off
 
 //drop if missing(estimateVA)
 //drop if Year < 2002
-local depVar "PctPopUrban"
-local indVar "lgGDPLCU"
+local depVar "cum_VA"
+local indVar "cum_PctUrb"
 
 levels(Country), local(countries)
 foreach country of local countries {
@@ -14,10 +14,11 @@ foreach country of local countries {
 	 //xtpedroni `depvar' `indVar' if Country != "`country'" & cointegrated, trend
 	if 1 {
 		di "`country'"
-		xtpedroni `depVar' `indVar' if Country != "`country'" & cointegrated, trend
-		xtpedroni `depVar' `indVar' if Country != "`country'" & cointegrated
+		//xtpedroni `depVar' `indVar' if Country != "`country'" & cointegrated, trend
+		xtpedroni `depVar' `indVar' if Country != "`country'"
 	}
 	// xtwest `depVar' `indVar' if Country == "`country'", trend constant lags(1 2)
 }
- // Russia  adf |    .01641     -1.696 
 
+// Belarus            adf |     2.507     -4.286 
+// Cost Rica            adf |     2.507     -4.286 

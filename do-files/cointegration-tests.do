@@ -1,7 +1,7 @@
 set more off
 
-use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/WDIUrbanDev-WGI.dta", clear
-//use "C:\Users\Colin\Desktop\UrbanizationCauseConsequence\data\WDIUrbanDev-WGI.dta", clear
+//use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/WDIUrbanDev-WGI.dta", clear
+use "C:\Users\Colin\Desktop\UrbanizationCauseConsequence\data\WDIUrbanDev-WGI.dta", clear
 
 gen byte cointegrated = 0
 
@@ -11,7 +11,7 @@ scalar criticalValue = -3.5
 local testSpec "trend"
 local column "B"
 local indVar "cum_PctUrb" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
-local depVar "cum_VA" // PctPopUrban, PctPopMillUrb
+local depVar "cum_Govt" // PctPopUrban, PctPopMillUrb
 
 levels(Country), local(countries)
 //putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/WGICointegration_results_fixed.xlsx", modify sheet(`indVar'`depVar')
@@ -56,7 +56,7 @@ tab Country if cointegrated == 1
 
 // A panel cointegration test indicates  cointegration:
 xtpedroni `depVar' `indVar' if cointegrated == 1
-xtpedroni `depVar' `indVar' if cointegrated == 1, trend
+//xtpedroni `depVar' `indVar' if cointegrated == 1, trend
 
 /*
 // Single case with graphs

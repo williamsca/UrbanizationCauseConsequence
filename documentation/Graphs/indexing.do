@@ -19,12 +19,17 @@ legend(off) ytick(100) note("") ///
 drop first*
 //drop indx*
 /*
-Country
-France
-Belgium
-Iceland
-Australia
-Germany
-United Kingdom
-Switzerland
+1996
+Low: Liberia, Niger, Mali
+High: Germany
+
+LBR, MLI,NER, AFG
+
+2015
+Low: Liberia, Afghanistan, Zimbabwe
+High: Germany, Korea, Estonia, Czech Republic
 */
+
+
+
+

@@ -20,5 +20,4 @@ foreach country of local countries {
 	// xtwest `depVar' `indVar' if Country == "`country'", trend constant lags(1 2)
 }
 
-// Belarus            adf |     2.507     -4.286 
-// Cost Rica            adf |     2.507     -4.286 
+

@@ -5,11 +5,13 @@ local indVar "Ctrl"
 regress PctPopUrban GDPPerCapRealLCU
 predict residual, res
 
-twoway (scatter `depVar' estimate`indVar' if Year == `year', legend(label(1 "2015 PctPopUrban"))) ///
+twoway (hist estimate`indVar' if Year == `year', yaxis(2) color(blue)) ///
+	   /*(hist estimate`indVar' if Year == 1996, yaxis(2) color(green)) /// */ ///
+	   (scatter `depVar' estimate`indVar' if Year == `year', legend(label(1 "2015 PctPopUrban"))) ///
 	   (lfit `depVar' estimate`indVar' if Year == `year', legend(label(2 "2015 Fitted Value"))) ///
 	   (scatter `depVar' estimate`indVar' if Year == 1996, legend(label(3 "1996 PctPopUrban")) color(green)) ///
-	   (lfit `depVar' estimate`indVar' if Year == 1996, legend(label(4 "1996 Fitted Value")) color(brown)), ///
-	   title(`depVar') /*saving(`indVar', replace) yscale(range(0 100))*/
+	   (lfit `depVar' estimate`indVar' if Year == 1996, legend(label(4 "1996 Fitted Value")) color(brown)) ///
+	   , title(`depVar') /*saving(`indVar', replace) yscale(range(0 100))*/
 	   
 drop res
 	   

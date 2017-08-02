@@ -1,16 +1,16 @@
-local indVar "PctPopUrban"
+local indVar "PctUrb"
 // estimateGovt, estimateRegQual
-local depVar "GDPPerCapRealLCU"
-
-
-//xtpedroni `indVar' `depVar' if cointegrated
-xtpedroni `indVar' `depVar' /*if Country != "China" & Country != "India" & Country != "Brazil"*/, trend
-xtpedroni `indVar' `depVar' /*if Country != "China" & Country != "India" & Country != "Brazil"*/
+local depVar "cum_Ctrl"
 
 /*
-xtunitroot ips `indVar' if cointegrated == 1
-xtunitroot ips `indVar' if cointegrated == 1, trend
-
-xtunitroot ips `depVar' if cointegrated == 1
-xtunitroot ips `depVar' if cointegrated == 1, trend
+//xtpedroni `indVar' `depVar' if cointegrated
+xtpedroni `depVar' `indVar' /*if Country != "China" & Country != "India" & Country != "Brazil"*/, trend
+xtpedroni `depVar' `indVar' /*if Country != "China" & Country != "India" & Country != "Brazil"*/
 */
+
+xtunitroot ips `indVar'
+xtunitroot ips `indVar', trend
+
+xtunitroot ips `depVar'
+xtunitroot ips `depVar'
+

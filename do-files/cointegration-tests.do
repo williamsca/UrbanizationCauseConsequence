@@ -1,17 +1,17 @@
 set more off
 
-use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/WDIUrbanDev-WGI.dta", clear
+use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/WDIUrbanDev-clean.dta", clear
 //use "C:\Users\Colin\Desktop\UrbanizationCauseConsequence\data\WDIUrbanDev-WGI.dta", clear
 
 gen byte cointegrated = 0
 
 // N = 25, no trend: -3.635   ; with trend: -4.258
 // N = 45, no trend: −3.475	  ; with trend: −3.998
-scalar criticalValue = -3.8
-local testSpec "trend"
+scalar criticalValue = -2.3
+local testSpec ""
 local column "B"
-local indVar "cum_RuleLaw" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
-local depVar "PctUrb" // PctPopUrban, PctPopMillUrb
+local indVar "lgPctUrb" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
+local depVar "lgGDP_PCLCU" // PctPopUrban, PctPopMillUrb
 
 levels(Country), local(countries)
 //putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/WGICointegration_results_fixed.xlsx", modify sheet(`indVar'`depVar')

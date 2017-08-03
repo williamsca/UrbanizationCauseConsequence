@@ -1,6 +1,5 @@
-local indVar "PctUrb"
-// estimateGovt, estimateRegQual
-local depVar "cum_Ctrl"
+local indVar "lgPctUrb"
+local depVar "lgGDP_PCLCU"
 
 /*
 //xtpedroni `indVar' `depVar' if cointegrated
@@ -12,5 +11,5 @@ xtunitroot ips `indVar'
 xtunitroot ips `indVar', trend
 
 xtunitroot ips `depVar'
-xtunitroot ips `depVar'
+xtunitroot ips `depVar', trend
 

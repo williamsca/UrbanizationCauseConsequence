@@ -1,15 +1,12 @@
-clear
-set more off
-
-use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/cointegratedGDPPerCapLCU.dta"
+//  use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/cointegratedGDPPerCapLCU.dta", clear
 
 // booleans to indicate whether we fail to reject the null at the 5% confidence level
 gen unitRoot = 0
 
 // Critical values: -3.0, -3.6 (trend), -1.95 (nocons)
-scalar criticalValue = -4
-local var "PctPopUrban"
-local testSpec "trend"
+scalar criticalValue = -2.0 
+local var "RsrcRnts"
+local testSpec ""
 local test "B"
 
 levels(Country), local(countries)
@@ -45,12 +42,8 @@ xtunitroot ips `var' if unitRoot == 1, demean lags(aic 6)
 xtunitroot ips `var' if unitRoot == 1, lags(aic 8)
 */
 
-xtunitroot ips `var' if unitRoot == 1 & Year >= 1975
-xtunitroot ips `var' if unitRoot == 1 & Year >= 1975, trend
-xtunitroot ips `var' if unitRoot == 1 & Year >= 1975, trend lags(aic 6)
-xtunitroot ips `var' if unitRoot == 1 & Year >= 1975, demean
-xtunitroot ips `var' if unitRoot == 1 & Year >= 1975, demean lags(aic 6)
-xtunitroot ips `var' if unitRoot == 1 & Year >= 1975, lags(aic 8)
+xtunitroot ips `var' if unitRoot == 1
+
 
 /*
 xtunitroot ips `var' if Year >= 1993, demean

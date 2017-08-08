@@ -3,7 +3,7 @@ set more off
 
 // cointegratedGovt, cointegratedRegQual
 // use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/cointegratedRegQual.dta"
-local testVar "estimateGovt"
+local testVar "estimateVA"
 
 levels(Country), local(countries)
 foreach country of local countries {
@@ -13,4 +13,3 @@ foreach country of local countries {
 	xtunitroot ips `testVar' if Country != "`country'"
 }
 
-//Uruguay, Uganda, Switzerland, Portugal, Norway, Nigeria, Mexico, Guyana, Cameroon, Burkina Faso, Angola, 

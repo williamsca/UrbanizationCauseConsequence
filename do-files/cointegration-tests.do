@@ -7,11 +7,11 @@ gen byte cointegrated = 0
 
 // N = 25, no trend: -3.635   ; with trend: -4.258
 // N = 45, no trend: −3.475	  ; with trend: −3.998
-scalar criticalValue = -3.4
-local testSpec "trend"
+scalar criticalValue = -2.5
+local testSpec ""
 local column "B"
-local indVar "estimateVA" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
-local depVar "PctUrb" // PctPopUrban, PctPopMillUrb
+local indVar "PctUrb" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
+local depVar "estimateVA" // PctPopUrban, PctPopMillUrb
 
 levels(Country), local(countries)
 //putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/WGICointegration_results_fixed.xlsx", modify sheet(`indVar'`depVar')

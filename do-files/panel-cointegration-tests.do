@@ -4,7 +4,7 @@ set more off
 
 //drop if missing(estimateVA)
 //drop if Year < 2002
-local depVar "cum_RuleLaw"
+local depVar "estimateVA"
 local indVar "PctUrb"
 
 levels(Country), local(countries)
@@ -20,5 +20,9 @@ foreach country of local countries {
 	// xtwest `depVar' `indVar' if Country == "`country'", trend constant lags(1 2)
 }
 
-// Paraguay, Botswana, Zambia, Guinea-Bissau
-// Azerbaijan
+// Mauritania adf |  .0002145      -2.13 
+// Latvia adf |    -.5623     -3.613 
+// Yemen, Rep. adf |    -1.199     -22.55 
+// Norway adf |    -1.598        -12
+
+//Vietnam, PanamaMa, Solomon Islands, Albania, Argentina, Nigeria

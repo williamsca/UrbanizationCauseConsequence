@@ -13,3 +13,6 @@ foreach country of local countries {
 	xtunitroot ips `testVar' if Country != "`country'"
 }
 
+// Malaysia, Belgium, Benin, Suriname, Italy, Austria, Dominican Republic
+// El Salvador, Burkina Faso, Finland, Netherlands, Saudi Arabia, Slovenia,
+// Estonia, 

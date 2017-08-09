@@ -1,5 +1,5 @@
-local indVar "PctUrb"
-local depVar "estimateVA"
+local indVar "PctPopUrban"
+local depVar "RsrcRnts"
 
 //xtpedroni `indVar' `depVar' if cointegrated
 xtpedroni `depVar' `indVar' /*if Country != "China" & Country != "India" & Country != "Brazil"*/, trend

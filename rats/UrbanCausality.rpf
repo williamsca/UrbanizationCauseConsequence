@@ -33,15 +33,15 @@ compute subgroup = 'All'
 compute bootstrap = 1    ;* set to 1 to run bootstrap simulation for group median
 compute ndraws = 1000    ;* number of replications desired for bootstrap
 
-compute Nsecs = 57       ;* cross section dimension, N
-compute Tperiods = 56    ;* time series dimension, T
+compute Nsecs = 82       ;* cross section dimension, N
+compute Tperiods = 20    ;* time series dimension, T
 
                              ;* -see note below for unbalanced panels
 allocate 0 Nsecs*Tperiods    ;* set allocate to at least N*T
 compute Tdum = 1             ;* set to 1 to subtract time means, else 0
 compute unbal = 1            ;* set to 1 for unbalanced panel, else 0
 
-open data RsrcRnts.xls      ;* read stacked panel data from file
+open data RsrcRnts2.xls      ;* read stacked panel data from file
 data(org=obs,format=xls)     ;* one column of length N*T per variable
 close data
 

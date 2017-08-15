@@ -11,7 +11,7 @@ scalar criticalValue = -3
 local testSpec ""
 local column "B"
 local indVar "PctPopUrban" // GDPRealUSD, GDPRealLCU, GDPPerCapRealUSD, GDPPerCapRealLCU
-local depVar "RsrcRnts" // PctPopUrban, PctPopMillUrb
+local depVar "eui_va" // PctPopUrban, PctPopMillUrb
 
 levels(Country), local(countries)
 //putexcel set "/Users/caw6/Desktop/UrbanizationCauseConsequence/test-results/Cointegration/WGICointegration_results_fixed.xlsx", modify sheet(`indVar'`depVar')

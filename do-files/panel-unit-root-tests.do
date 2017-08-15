@@ -1,49 +1,38 @@
+// The program assumes that the data are in panel form and that the panel
+// variable is named "Country"
+
 set more off
 
-// use "/Users/caw6/Desktop/UrbanizationCauseConsequence/data/cointegratedRegQual.dta", clear
 local testVar "RsrcRnts"
-local testStat "tds"
+local test "ips" // ips allows for unbalanced panels
+local testSpec "" // may want to include a trend
 
+// This will need to be changed depending on the test you are running
+// Use 'tds' for LLC and 'zttildebar' for IPS
+local testStat "zttildebar"
+
+// We fail to reject the null that all panels contain a unit root with 
+// this level of confidence
+scalar confidenceLevel = .8 
+
+////////////////////////////////////////////////////////////////////////////
 scalar maxZtTilde = -50
 scalar maxP = 0
 scalar noUnitRoot = ""
 levels(Country), local(countries)
 
-while maxP < .80 {
+// Repeated unit root tests
+while maxP < confidenceLevel {
 	foreach country of local countries {
-		//di "`country'"
-		xtunitroot llc `testVar' if Country != "`country'"
+		// di "`country'"
+		xtunitroot `test' `testVar' if Country != "`country'"
 		if r(`testStat') > maxZtTilde {
 			scalar maxZtTilde = r(`testStat')
 			scalar noUnitRoot = "`country'"
 			scalar maxP = r(p_`testStat')
 		}
 	}
-	
 	drop if Country == noUnitRoot
 }
-/*
 
-foreach country of local countries {
-	di "`country'"
-	//xtunitroot ips estimateRegQual if Country == "`country'"
-	//xtunitroot ips `testVar' if Country = "`country'", trend
-	xtunitroot ips `testVar' if Country != "`country'"
-	if r(zttildebar) > maxZtTilde {
-		scalar maxZtTilde = r(zttildebar)
-		scalar noUnitRoot = "`country'"
-		display noUnitRoot
-		display maxZtTilde
-	}
-}
-drop if Country == noUnitRoot
-*/
-
-// Malaysia, Belgium, Benin, Suriname, Italy, Austria, Dominican Republic
-// El Salvador, Burkina Faso, Finland, Netherlands, Saudi Arabia, Slovenia,
-// Estonia, 
-
-
-// xtunitroot ips `testVar' if Region == "Sub-Saharan Africa"
-// xtpedroni RsrcRnts PctPopUrban
 
